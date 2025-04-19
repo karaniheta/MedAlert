@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'signup.dart'; 
+import 'package:medalert/home.dart';
+import 'signup.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -55,6 +57,10 @@ class LoginScreen extends StatelessWidget {
               // Login button
               ElevatedButton(
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScrenn()),
+                  );
                   // TODO: Add login logic
                 },
                 style: ElevatedButton.styleFrom(
