@@ -38,7 +38,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'age', 'gender', 'profile_picture', 'profile_picture_url']
+        fields = ['email','username', 'age', 'gender', 'profile_picture', 'profile_picture_url']
         
     def update(self, instance, validated_data):
         if 'profile_picture' in validated_data:
