@@ -1,16 +1,14 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from django.contrib.auth import authenticate
-from .models import CustomUser
+from .models import CustomUser, HealthTip, FirstAidCondition
 from .serializers import UserSerializer
 from django.contrib.auth import logout
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .serializers import UpdateUserSerializer
-from .serializers import RegisterSerializer
-
+from .serializers import UpdateUserSerializer, RegisterSerializer, HealthTipSerializer, FirstAidConditionSerializer
 
 class RegisterView(APIView):
     def post(self, request):
@@ -64,3 +62,31 @@ class LogoutView(APIView):
         # JWT logout doesn't require any server-side changes.
         # Simply return a response saying the user has been logged out.
         return Response({"message": "Successfully logged out!"}, status=200)
+    
+class HealthTipList(APIView):
+    def get(self, request):
+        tips = HealthTip.objects.all()
+        serializer = HealthTipSerializer(tips, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = HealthTipSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FirstAidConditionList(APIView):
+    def get(self, request):
+        conditions = FirstAidCondition.objects.all()
+        serializer = FirstAidConditionSerializer(conditions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = FirstAidConditionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+

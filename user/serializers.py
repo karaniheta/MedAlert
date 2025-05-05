@@ -1,7 +1,7 @@
 # user/serializers.py
 
 from rest_framework import serializers
-from .models import CustomUser  
+from .models import CustomUser, HealthTip, FirstAidCondition, FirstAidSection  
 from .utils import send_signup_email
 
 class UserSerializer(serializers.ModelSerializer):
@@ -45,3 +45,21 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             profile_picture = validated_data.pop('profile_picture')
             instance.profile_picture = profile_picture
         return super().update(instance, validated_data)
+
+class HealthTipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HealthTip
+        fields = ['id', 'title', 'summary', 'category', 'created_at']
+
+class FirstAidSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FirstAidSection
+        fields = ['heading', 'content']
+
+class FirstAidConditionSerializer(serializers.ModelSerializer):
+    sections = FirstAidSectionSerializer(many=True)
+
+    class Meta:
+        model = FirstAidCondition
+        fields = ['id', 'title', 'sections']
+

@@ -46,3 +46,35 @@ class CustomUser(AbstractBaseUser):
     def __str__(self):
         return self.email
 
+class HealthTip(models.Model):
+    title = models.CharField(max_length=255)
+    summary = models.TextField()
+    category = models.CharField(max_length=100, blank=True)
+    source = models.CharField(max_length=255, blank=True, null=True)  # New
+    importance_level = models.IntegerField(default=1)  # 1 (low) to 5 (critical)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class FirstAidCondition(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    category = models.CharField(max_length=50, default='General')
+    urgency_level = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class FirstAidSection(models.Model):
+    condition = models.ForeignKey(FirstAidCondition, related_name='sections', on_delete=models.CASCADE)
+    heading = models.CharField(max_length=255)
+    content = models.TextField()
+    step_number = models.IntegerField(default=1)  
+
+    def __str__(self):
+        return f"{self.condition.title} - {self.heading}"
+
+
+
