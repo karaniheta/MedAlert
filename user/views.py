@@ -10,6 +10,7 @@ from .serializers import (
     AppointmentSerializer, AmbulanceSerializer
 )
 from django.contrib.auth import logout
+from django.core.management import call_command
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -128,8 +129,6 @@ class BookAmbulanceView(APIView):
             serializer.save()
             return Response({'message': 'Ambulance requested successfully'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-from django.core.management import call_command
 
 class RunMigrationView(APIView):
     def get(self, request):
