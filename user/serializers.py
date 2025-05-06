@@ -1,7 +1,7 @@
 # user/serializers.py
 
 from rest_framework import serializers
-from .models import CustomUser, HealthTip, FirstAidCondition, FirstAidSection  
+from .models import CustomUser, HealthTip, FirstAidCondition, FirstAidSection,Appointment,AmbulanceBooking
 from .utils import send_signup_email
 
 class UserSerializer(serializers.ModelSerializer):
@@ -63,3 +63,12 @@ class FirstAidConditionSerializer(serializers.ModelSerializer):
         model = FirstAidCondition
         fields = ['id', 'title', 'sections']
 
+class AppointmentSerializer(serializers.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+
+class AmbulanceSerializer(serializers.ModelForm):
+    class Meta:
+        model = AmbulanceBooking
+        fields = '__all__'

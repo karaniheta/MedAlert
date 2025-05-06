@@ -8,7 +8,7 @@ from .serializers import UserSerializer
 from django.contrib.auth import logout
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .serializers import UpdateUserSerializer, RegisterSerializer, HealthTipSerializer, FirstAidConditionSerializer
+from .serializers import UpdateUserSerializer, RegisterSerializer, HealthTipSerializer, FirstAidConditionSerializer,AppointmentSerializer, AmbulanceSerializer
 
 class RegisterView(APIView):
     def post(self, request):
@@ -90,3 +90,18 @@ class FirstAidConditionList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+class BookAppointmentView(APIView):
+    def post(self, request):
+        serializer = AppointmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Appointment booked successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class BookAmbulanceView(APIView):
+    def post(self, request):
+        serializer = AmbulanceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Ambulance requested successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

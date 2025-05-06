@@ -76,5 +76,14 @@ class FirstAidSection(models.Model):
     def __str__(self):
         return f"{self.condition.title} - {self.heading}"
 
+class Appointment(models.Model):
+    name = models.CharField(max_length=100)
+    phone_no = models.CharField(max_length=15)
+    age = models.IntegerField()
+    gender = models.CharField(max_length=10)
+    specialist = models.CharField(max_length=100)
 
-
+class AmbulanceBooking(models.Model):
+    name = models.CharField(max_length=100)
+    phone_no = models.CharField(max_length=15)
+    address = models.TextField()
