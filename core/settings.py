@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@ylg&yp^ft^8@9w!ah40(-x*$$dg&m9^kpoh2zu5#t$h)1c4c_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['medalert-fv87.onrender.com', 'localhost', '127.0.0.1']
 
 import os
 from dotenv import load_dotenv
@@ -65,7 +65,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-ALLOWED_HOSTS=[]
 MEDIA_URL = "https://res.cloudinary.com/dpval4x3u/"
 
 REST_FRAMEWORK = {
