@@ -109,4 +109,13 @@ class BookAmbulanceView(APIView):
             return Response({'message': 'Ambulance requested successfully'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+from django.core.management import call_command
 
+class RunMigrationView(APIView):
+    def get(self, request):
+        try:
+            call_command('makemigrations')
+            call_command('migrate')
+            return Response({"message": "Migrations applied successfully."})
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
