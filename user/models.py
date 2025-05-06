@@ -27,20 +27,19 @@ class CustomUser(AbstractBaseUser):
     age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=20, blank=True, null=True)
     profile_picture = CloudinaryField('image', null=True, blank=True)
-    profile_picture_url = models.URLField(null=True, blank=True)  # Field for storing Cloudinary URL
+    profile_picture_url = models.URLField(null=True, blank=True)  
 
 
    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'age', 'gender']
 
-    objects = CustomUserManager()  # Use the custom manager
+    objects = CustomUserManager()  
 
     def save(self, *args, **kwargs):
         if self.profile_picture:
-            # Upload the image to Cloudinary and set the URL
             upload_result = cloudinary.uploader.upload(self.profile_picture)
-            self.profile_picture_url = upload_result['secure_url']  # Cloudinary URL
+            self.profile_picture_url = upload_result['secure_url']  
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -50,8 +49,8 @@ class HealthTip(models.Model):
     title = models.CharField(max_length=255)
     summary = models.TextField()
     category = models.CharField(max_length=100, blank=True)
-    source = models.CharField(max_length=255, blank=True, null=True)  # New
-    importance_level = models.IntegerField(default=1)  # 1 (low) to 5 (critical)
+    source = models.CharField(max_length=255, blank=True, null=True)  
+    importance_level = models.IntegerField(default=1)  
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -82,6 +81,7 @@ class Appointment(models.Model):
     age = models.IntegerField()
     gender = models.CharField(max_length=10)
     specialist = models.CharField(max_length=100)
+    hospital= models.CharField(max_length=100, default='Cooper Hospital')
 
 class AmbulanceBooking(models.Model):
     name = models.CharField(max_length=100)

@@ -45,23 +45,30 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             profile_picture = validated_data.pop('profile_picture')
             instance.profile_picture = profile_picture
         return super().update(instance, validated_data)
-
 class HealthTipSerializer(serializers.ModelSerializer):
     class Meta:
         model = HealthTip
-        fields = ['id', 'title', 'summary', 'category', 'created_at']
+        fields = ['id', 'title', 'summary', 'category', 'source', 'importance_level', 'created_at']
 
 class FirstAidSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = FirstAidSection
-        fields = ['heading', 'content']
+        fields = ['id', 'heading', 'content', 'step_number']
 
 class FirstAidConditionSerializer(serializers.ModelSerializer):
     sections = FirstAidSectionSerializer(many=True)
 
     class Meta:
         model = FirstAidCondition
-        fields = ['id', 'title', 'sections']
+        fields = ['id', 'title', 'description', 'category', 'urgency_level', 'created_at', 'sections']
+
+    def create(self, validated_data):
+        sections_data = validated_data.pop('sections')
+        condition = FirstAidCondition.objects.create(**validated_data)
+        for section in sections_data:
+            FirstAidSection.objects.create(condition=condition, **section)
+        return condition
+
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:

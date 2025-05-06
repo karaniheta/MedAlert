@@ -65,33 +65,53 @@ class LogoutView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, request):
-        return Response({"message": "Successfully logged out!"}, status=200)
+        # This will only log out the user by revoking the refresh token, ensuring no new access token can be issued.
+        try:
+            refresh_token = request.data.get('refresh_token')
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()  # Blacklist the refresh token (if using a blacklist approach)
+            return Response({"message": "Successfully logged out!"}, status=200)
+        except Exception as e:
+            return Response({"error": "Failed to logout properly."}, status=400)
 
-class HealthTipList(APIView):
+class HealthTipView(APIView):
     def get(self, request):
-        tips = HealthTip.objects.all()
+        tips = HealthTip.objects.all().order_by('-created_at')
         serializer = HealthTipSerializer(tips, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = HealthTipSerializer(data=request.data)
+        data = request.data
+
+        # Check if data is a list
+        if isinstance(data, list):
+            serializer = HealthTipSerializer(data=data, many=True)
+        else:
+            serializer = HealthTipSerializer(data=data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class FirstAidConditionList(APIView):
+class FirstAidConditionView(APIView):
     def get(self, request):
-        conditions = FirstAidCondition.objects.all()
+        conditions = FirstAidCondition.objects.prefetch_related('sections').all().order_by('-created_at')
         serializer = FirstAidConditionSerializer(conditions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = FirstAidConditionSerializer(data=request.data)
+        is_many = isinstance(request.data, list)
+        serializer = FirstAidConditionSerializer(data=request.data, many=is_many)
+
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'msg': 'First aid condition(s) created successfully'}, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class BookAppointmentView(APIView):
     def post(self, request):

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from user.views import RegisterView, LoginView,LogoutView,UpdateProfileView, HealthTipList, FirstAidConditionList,BookAmbulanceView,BookAppointmentView,RunMigrationView
+from user.views import RegisterView, LoginView,LogoutView,UpdateProfileView, HealthTipView, FirstAidConditionView,BookAmbulanceView,BookAppointmentView,RunMigrationView
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
@@ -27,8 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('update/', UpdateProfileView.as_view(),name='update'),
-    path('api/health-tips/', HealthTipList.as_view(), name='healthtip-list'),
-    path('api/first-aid-conditions/', FirstAidConditionList.as_view(), name='firstaidcondition-list'),
+    path('health-tips/', HealthTipView.as_view(), name='healthtip-list'),
+    path('first-aid-conditions/', FirstAidConditionView.as_view(), name='firstaidcondition-list'),
     path('appointment/', BookAppointmentView.as_view(), name='appointment'),
     path('ambulance/', BookAmbulanceView.as_view(), name='ambulance'),
     path('run-migrations/', RunMigrationView.as_view(), name='run-migrations'),
