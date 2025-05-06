@@ -81,8 +81,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+CSRF_COOKIE_NAME = 'csrftoken'  # This is the default
+CSRF_COOKIE_SECURE = False  # Set to True if you're using HTTPS
+CSRF_COOKIE_HTTPONLY = False  # Makes the CSRF token accessible via JavaScript
 
 ROOT_URLCONF = 'core.urls'
 CORS_ALLOW_ALL_ORIGINS = True
@@ -90,7 +94,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'core/user/templates',  # Add this path
+        ],
+        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile</title>
+  <style>
+    :root {
+      --primary-color: #4a90e2;
+      --white: #ffffff;
+      --gray-light: #f0f0f0;
+      --text-light: #666666;
+      --text-lighter: #999999;
+      --border-radius: 8px;
+      --spacing-xs: 4px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+      --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Profile Page Styles */
+    .profile-header {
+      background-color: var(--primary-color);
+      padding: 0;
+    }
+
+    .profile-banner {
+      height: 150px;
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-md);
+      position: relative;
+    }
+
+    .profile-content {
+      padding-top: 60px;
+      position: relative;
+    }
+
+    .profile-card {
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+      margin-top: -80px;
+      position: relative;
+      z-index: 10;
+      animation: slideInUp 0.5s ease;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: -70px auto 20px;
+      border: 4px solid var(--white);
+      background-color: var(--gray-light);
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .profile-info,
+    .profile-location {
+      color: var(--text-light);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .profile-details {
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin-top: var(--spacing-md);
+      box-shadow: var(--shadow-sm);
+      animation: slideInUp 0.7s ease;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .detail-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: var(--spacing-md);
+    }
+
+    .detail-icon img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .detail-content {
+      flex: 1;
+    }
+
+    .detail-label {
+      font-size: 14px;
+      color: var(--text-lighter);
+      margin-bottom: 2px;
+    }
+
+    .detail-value {
+      font-weight: 500;
+    }
+
+    .profile-actions {
+      margin-top: var(--spacing-lg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+      animation: slideInUp 0.9s ease;
+    }
+
+    .action-btn {
+      padding: var(--spacing-md);
+    }
+  </style>
+</head>
+<body>
+  <h1>Profile of {{ user.username }}</h1>
+
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" value="{{ form.username.value }}" required>
+    </div>
+
+    <div>
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="age" value="{{ form.age.value }}" required>
+    </div>
+
+    <div>
+      <label for="gender">Gender:</label>
+      <input type="text" id="gender" name="gender" value="{{ form.gender.value }}" required>
+    </div>
+
+    <div>
+      <label for="profile_picture">Profile Picture:</label>
+      {% if user.profile_picture %}
+        <div class="profile-avatar">
+          <img src="{{ user.profile_picture_url }}" alt="Profile Picture">
+        </div>
+      {% endif %}
+      <input type="file" id="profile_picture" name="profile_picture">
+    </div>
+
+    <button type="submit">Update Profile</button>
+  </form>
+
+  <a href="/logout">Logout</a>
+</body>
+</html>

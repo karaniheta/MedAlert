@@ -9,30 +9,22 @@ from .serializers import (
     HealthTipSerializer, FirstAidConditionSerializer,
     AppointmentSerializer, AmbulanceSerializer
 )
+from .forms import ProfileForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
 from django.contrib.auth import logout
 from django.core.management import call_command
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
-
-class RegisterView(APIView):
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
-            refresh_token = str(refresh)
-
-            return Response({
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-                'msg': 'User created and logged in successfully'
-            }, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+from .models import HealthTip
+from django.shortcuts import render, redirect 
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth import authenticate, login 
+import json
 class LoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -137,3 +129,92 @@ class RunMigrationView(APIView):
             return Response({"message": "Migrations applied successfully."})
         except Exception as e:
             return Response({"error": str(e)}, status=500)
+        
+@csrf_protect
+def register_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+        else:
+            User = get_user_model()
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'Email already exists.')
+            else:
+                user = User.objects.create_user(email=email, password=password)
+                login(request, user)  # Automatically log in the user after registration
+                messages.success(request, 'Account created successfully.')
+                return redirect('home')  # Redirect to the home page after successful registration
+
+    return render(request, 'register.html')
+
+
+@login_required
+def profile_view(request):
+    # Fetch the logged-in user's details
+    user = request.user
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')  # Redirect back to the profile page after successful update
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ProfileForm(instance=user)
+
+    return render(request, 'profile.html', {'form': form, 'user': user})
+
+@csrf_protect
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Authenticate user
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)  # Login the user
+            messages.success(request, 'Login successful.')
+            return redirect('home')  # Redirect to the home page or wherever you want
+        else:
+            messages.error(request, 'Invalid email or password.')
+
+    return render(request, 'login.html')
+
+def first_aid_conditions_view(request):
+    conditions = FirstAidCondition.objects.prefetch_related('sections').all().order_by('-created_at')
+    return render(request, 'first_aid_conditions.html', {'conditions': conditions})
+
+def home(request):
+    health_tips = HealthTip.objects.all() 
+    return render(request, 'home.html',{'health_tips': health_tips})
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been logged out.')
+    return redirect('login')  # Redirect to the login page after logout
+
+# @login_required
+# def profile_view(request):
+#     # Fetch the logged-in user's details
+#     user = request.user
+
+#     if request.method == 'POST':
+#         form = ProfileForm(request.POST, request.FILES, instance=user)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Profile updated successfully!')
+#             return redirect('profile')  # Redirect back to the profile page after successful update
+#         else:
+#             messages.error(request, 'Please correct the errors below.')
+#     else:
+#         form = ProfileForm(instance=user)
+
+#     return render(request, 'profile.html', {'form': form, 'user': user})

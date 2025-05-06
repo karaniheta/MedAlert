@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>First Aid Conditions</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>First Aid Conditions</h1>
+    </header>
+    <main>
+        {% for condition in conditions %}
+            <div class="condition-card">
+                <h2>{{ condition.title }}</h2>
+                <p><strong>Description:</strong> {{ condition.description }}</p>
+                <p><strong>Category:</strong> {{ condition.category }}</p>
+                <p><strong>Urgency:</strong> {{ condition.urgency_level }}</p>
+                
+            </div>
+            <hr>
+        {% empty %}
+            <p>No conditions available at the moment.</p>
+        {% endfor %}
+    </main>
+    <footer>
+        <p>&copy; 2025 Health Platform</p>
+    </footer>
+</body>
+</html>
