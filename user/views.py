@@ -66,7 +66,6 @@ class LogoutView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, request):
-        # This will only log out the user by revoking the refresh token, ensuring no new access token can be issued.
         try:
             refresh_token = request.data.get('refresh_token')
             if refresh_token:
