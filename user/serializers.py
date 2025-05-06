@@ -63,12 +63,12 @@ class FirstAidConditionSerializer(serializers.ModelSerializer):
         model = FirstAidCondition
         fields = ['id', 'title', 'sections']
 
-class AppointmentSerializer(serializers.ModelForm):
+class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = '__all__'
 
-class AmbulanceSerializer(serializers.ModelForm):
+class AmbulanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = AmbulanceBooking
         fields = '__all__'
