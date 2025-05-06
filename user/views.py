@@ -13,12 +13,23 @@ from django.contrib.auth import logout
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+
 class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'User created successfully'}, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
+            return Response({
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+                'msg': 'User created and logged in successfully'
+            }, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
@@ -98,13 +109,4 @@ class BookAmbulanceView(APIView):
             return Response({'message': 'Ambulance requested successfully'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-from django.core.management import call_command
 
-class RunMigrationView(APIView):
-    def get(self, request):
-        try:
-            call_command('makemigrations')
-            call_command('migrate')
-            return Response({"message": "Migrations applied successfully."})
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
