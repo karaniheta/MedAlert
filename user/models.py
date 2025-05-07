@@ -2,24 +2,20 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from cloudinary.models import CloudinaryField
 import cloudinary.uploader
+from django.contrib.auth.models import User
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, username=None, **extra_fields):
-        """
-        Create and return a regular user with an email and password.
-        """
         if not email:
             raise ValueError("Email is required")
-        
         email = self.normalize_email(email)
-        
         if not username:
             username = email.split('@')[0]
-        
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)  
         user.save(using=self._db)  
         return user
+
 
 class CustomUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
@@ -27,20 +23,19 @@ class CustomUser(AbstractBaseUser):
     age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=20, blank=True, null=True)
     profile_picture = CloudinaryField('image', null=True, blank=True)
-    profile_picture_url = models.URLField(null=True, blank=True)  
+    profile_picture_url = models.URLField(null=True, blank=True)
 
-
-   
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'age', 'gender']
 
     objects = CustomUserManager()  
 
     def save(self, *args, **kwargs):
-        if self.profile_picture:
-            upload_result = cloudinary.uploader.upload(self.profile_picture)
-            self.profile_picture_url = upload_result['secure_url']  
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)  
+        if self.profile_picture and hasattr(self.profile_picture, 'url'):
+            self.profile_picture_url = self.profile_picture.url
+            super().save(update_fields=['profile_picture_url'])  
+
 
     def __str__(self):
         return self.email
@@ -81,14 +76,20 @@ class FirstAidSection(models.Model):
     def __str__(self):
         return f"{self.condition.title} - {self.heading}"
 
+from django.db import models
+
 class Appointment(models.Model):
     name = models.CharField(max_length=100)
     phone_no = models.CharField(max_length=15)
     age = models.IntegerField()
     gender = models.CharField(max_length=10)
     specialist = models.CharField(max_length=100)
-    hospital= models.CharField(max_length=100, default='Cooper Hospital')
+    hospital = models.CharField(max_length=100, default='Cooper Hospital')
 
+    def __str__(self):
+        return f"Appointment for {self.name} at {self.hospital}"
+
+    
 class AmbulanceBooking(models.Model):
     name = models.CharField(max_length=100)
     phone_no = models.CharField(max_length=15)

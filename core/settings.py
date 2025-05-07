@@ -58,6 +58,8 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
 
+STATIC_URL = '/static/'
+
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
@@ -84,9 +86,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
-CSRF_COOKIE_NAME = 'csrftoken'  # This is the default
-CSRF_COOKIE_SECURE = False  # Set to True if you're using HTTPS
-CSRF_COOKIE_HTTPONLY = False  # Makes the CSRF token accessible via JavaScript
+CSRF_COOKIE_NAME = 'csrftoken'  
+CSRF_COOKIE_SECURE = False 
+CSRF_COOKIE_HTTPONLY = False 
 
 ROOT_URLCONF = 'core.urls'
 CORS_ALLOW_ALL_ORIGINS = True
@@ -95,7 +97,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'core/user/templates',  # Add this path
+            BASE_DIR / 'core/user/templates', 
         ],
         
         'APP_DIRS': True,

@@ -16,27 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from user.views import register_view,login_view,LogoutView,profile_view,UpdateProfileView,logout_view,home,first_aid_conditions_view,FirstAidConditionView,BookAmbulanceView,BookAppointmentView,RunMigrationView
+from user.views import register_view,login_view,profile_view,first_aid_conditions_view,book_ambulance_view,logout_view,home,first_aid_conditions_view,book_appointment_view
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework.routers import DefaultRouter
-
 
 urlpatterns = [
-    path('', login_view, name='login'),
-    path('home/', home, name='home'),
-     path('profile/', profile_view, name='profile'), 
+    path('', home, name='home'),
+    path('login/', login_view, name='login'),
+
+    path('first_aid_conditions/', first_aid_conditions_view, name='first_aid_conditions_view'),
+    path('profile/', profile_view, name='profile'), 
     path('register/', register_view, name='register'),
-    # path('login/', login_view, name='login'),
+    path('ambulance/', book_ambulance_view, name='ambulance'),
     path('admin/', admin.site.urls),
     path('logout/',logout_view, name='logout'),
-    path('update/', UpdateProfileView.as_view(),name='update'),
-    path('appointment/', BookAppointmentView.as_view(), name='appointment'),
-    path('ambulance/', BookAmbulanceView.as_view(), name='ambulance'),
-    path('run-migrations/', RunMigrationView.as_view(), name='run-migrations'),
+    path('appointment/',book_appointment_view, name='appointment'),
     path('first-aid-conditions/', first_aid_conditions_view, name='first_aid_conditions'),
-    # path('success/', views.success, name='success'),
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

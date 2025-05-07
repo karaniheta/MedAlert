@@ -4,9 +4,8 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedAlert - Log in</title>
+    <title>MedAlert - Ambulance Booking</title>
     <style>
-        /* Global Styles */
         :root {
             --primary-color: #6a5acd;
             --white: #ffffff;
@@ -31,46 +30,45 @@
             margin: 0 auto;
             padding: var(--spacing-lg);
         }
+
         .logo-container {
-  display: flex;
-  align-items: center;
-  gap: 16px; /* space between logo and brand name */
-  margin-bottom: 20px;
-}
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
 
-.logo {
-  width: 180px;   /* increase width */
-  height: 180px;  /* maintain aspect ratio */
-  object-fit: contain;
-}
+        .logo {
+            width: 60px;
+            margin-bottom: 10px;
+        }
 
-.brand-name {
-  font-size: 2.5rem;     /* increase font size */
-  font-weight: 700;
-  color: #333;
-}
+        .brand-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
         .signup-form {
             background-color: var(--white);
             border-radius: var(--border-radius);
             padding: var(--spacing-lg);
             box-shadow: var(--shadow-sm);
             animation: fadeIn 0.5s ease;
+            padding: 20;
+            
         }
 
-        .form-group { 
-  margin-bottom: var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-}
-
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
 
         .form-group input {
-            
+        
             padding: 20px;
             font-size: 14px;
             border-radius: var(--border-radius);
             border: 1px solid #ddd;
             background-color: var(--gray-light);
+            margin-right: 20;
         }
 
         .form-group input:focus {
@@ -81,43 +79,21 @@
         .form-group input::placeholder {
             color: var(--text-lighter);
         }
-
-   
-.message-container {
-  margin: 1rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+        select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: var(--border-radius);
+    border: 1px solid #ddd;
+    background-color: var(--gray-light);
 }
 
-.message {
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-weight: 500;
-  color: white;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-/* Message type styles */
-.message-success {
-  background-color: #28a745; /* Green */
-}
-
-.message-error, .message-danger {
-  background-color: #dc3545; /* Red */
-}
-
-.message-warning {
-  background-color: #ffc107; /* Yellow */
-  color: #212529;
-}
-
-.message-info {
-  background-color: #17a2b8; /* Blue */
+select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(106, 90, 205, 0.1);
 }
 
         .btn {
-            
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -136,18 +112,68 @@
             background-color: #5a4bc2;
         }
 
-        .login-container {
-            text-align: center;
-            margin-top: var(--spacing-lg);
-        }
+        .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+  margin-bottom: 20px;
+}
 
-        .login-container a {
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
+.logo {
+  width: 180px;   
+  height: 180px;  
+  object-fit: contain;
+}
 
-        /* Animation */
+.brand-name {
+  font-size: 2.5rem;    
+  font-weight: 700;
+  color: #333;
+}
+
+        .form-group { 
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+}
+.message-container {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message {
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: white;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.message-success {
+  background-color: #28a745; 
+}
+
+.message-error, .message-danger {
+  background-color: #dc3545; 
+}
+
+.message-warning {
+  background-color: #ffc107; 
+  color: #212529;
+}
+
+.message-info {
+  background-color: #17a2b8; 
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+    
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -164,10 +190,11 @@
             <img src="https://img.freepik.com/premium-vector/ambulance-icon-vector-design-templates_1172029-2544.jpg?w=1380" alt="MedAlert Logo" class="logo">
             <h1 class="brand-name">MedAlert</h1>
         </div>
+        
         <div class="signup-form">
-            <form id="signup-form" method="POST" action="/login/">
+            <form id="signup-form" method="POST" action="/ambulance/">
                 {% csrf_token %}
-               
+              
                 {% if messages %}
                 <div class="message-container">
                   {% for message in messages %}
@@ -177,17 +204,34 @@
                   {% endfor %}
                 </div>
               {% endif %}
-
+              
+              
                 <div class="form-group">
-                    <input type="email" id="email" name="email" placeholder="email" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="password" name="password" placeholder="Password" required>
+                  <label for="name">Name:</label>
+                  <input type="text" id="name" name="name" required value="{{ user.username }}">
                 </div>
               
-                <button type="submit" class="btn btn-primary btn-signup">LOG IN</button>
-            </form>
-            
+                <div class="form-group">
+                  <label for="phone_no">Phone Number:</label>
+                  <input type="text" id="phone_no" name="phone_no" required value="{{ user.phone_no }}">
+                </div>
+               
+                <div class="form-group">
+                  <label for="address">Address:</label>
+                  <input type="text" id="address" name="address" required value="{{ user.username }}">
+                </div>
+              
+               
+              
+                <div class="auth-buttons" style="justify-content: center; margin-top: var(--spacing-md);">
+                  <button type="submit" style="background-color: var(--primary-color); color: var(--white); padding: 10px 16px; border-radius: var(--border-radius); font-weight: 500; border: none;">
+                    Book Ambulance
+                  </button>
+                </div>
+              </form>
+              
+              
+          
         </div>
         
         <div class="login-container">

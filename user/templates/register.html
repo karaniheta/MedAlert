@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedAlert - Sign Up</title>
@@ -32,22 +33,24 @@
         }
 
         .logo-container {
-            text-align: center;
-            margin-bottom: var(--spacing-lg);
-        }
+  display: flex;
+  align-items: center;
+  gap: 16px; /* space between logo and brand name */
+  margin-bottom: 20px;
+}
 
-        .logo {
-            width: 60px;
-            margin-bottom: 10px;
-        }
+.logo {
+  width: 180px;   /* increase width */
+  height: 180px;  /* maintain aspect ratio */
+  object-fit: contain;
+}
 
-        .brand-name {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .signup-form {
+.brand-name {
+  font-size: 2.5rem;     /* increase font size */
+  font-weight: 700;
+  color: #333;
+}
+.signup-form {
             background-color: var(--white);
             border-radius: var(--border-radius);
             padding: var(--spacing-lg);
@@ -55,13 +58,16 @@
             animation: fadeIn 0.5s ease;
         }
 
-        .form-group {
-            margin-bottom: var(--spacing-lg);
-        }
+        .form-group { 
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+}
+
 
         .form-group input {
-            width: 100%;
-            padding: 10px;
+            
+            padding: 20px;
             font-size: 14px;
             border-radius: var(--border-radius);
             border: 1px solid #ddd;
@@ -77,6 +83,7 @@
             color: var(--text-lighter);
         }
 
+   
         .btn {
             width: 100%;
             padding: 10px;
@@ -88,6 +95,39 @@
             cursor: pointer;
         }
 
+        
+.message-container {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message {
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: white;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Message type styles */
+.message-success {
+  background-color: #28a745; /* Green */
+}
+
+.message-error, .message-danger {
+  background-color: #dc3545; /* Red */
+}
+
+.message-warning {
+  background-color: #ffc107; /* Yellow */
+  color: #212529;
+}
+
+.message-info {
+  background-color: #17a2b8; /* Blue */
+}
         .btn-primary {
             background-color: var(--primary-color);
         }
@@ -121,22 +161,24 @@
 <body>
     <div class="container signup-container">
         <div class="logo-container">
-            <img src="images/logo.svg" alt="MedAlert Logo" class="logo">
+            <img src="https://img.freepik.com/premium-vector/ambulance-icon-vector-design-templates_1172029-2544.jpg?w=1380" alt="MedAlert Logo" class="logo">
             <h1 class="brand-name">MedAlert</h1>
         </div>
-        
         <div class="signup-form">
             <form id="signup-form" method="POST" action="/register/">
                 {% csrf_token %}
                 {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
+                <div class="message-container">
+                  {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
                 </div>
-            {% endif %}
+              {% endif %}
+            <div class="form-group">
+                <input type="username" id="username" name="username" placeholder="username" required>
+            </div>
                 <div class="form-group">
                     <input type="email" id="email" name="email" placeholder="Email" required>
                 </div>

@@ -2,30 +2,172 @@
 {% load static %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>First Aid Conditions</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Aid Conditions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent-color: #ff4d4f;
+      --white: #ffffff;
+      --text-dark: #333333;
+      --text-light: #666666;
+      --background: #f9f9f9;
+      --border-radius: 12px;
+      --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+      --spacing-md: 16px;
+      --spacing-lg: 32px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: var(--background);
+      color: var(--text-dark);
+    }
+
+    header.app-header {
+      background-color: var(--white);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .auth-buttons a {
+      text-decoration: none;
+      background-color: var(--accent-color);
+      color: var(--white);
+      padding: 8px 16px;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .auth-buttons a:hover {
+      background-color: #d9363e;
+    }
+
+    main {
+      padding: var(--spacing-lg) var(--spacing-md);
+      max-width: 960px;
+      margin: auto;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      text-align: center;
+    }
+
+    .condition-card {
+      background-color: var(--white);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .condition-card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: var(--accent-color);
+    }
+
+    .condition-card p {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: var(--spacing-md);
+      font-size: 14px;
+      background-color: var(--white);
+      color: var(--text-light);
+      box-shadow: var(--shadow-sm);
+      margin-top: var(--spacing-lg);
+    }
+
+    @media (max-width: 600px) {
+      .auth-buttons {
+        justify-content: center;
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      header.app-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .section-title {
+        font-size: 20px;
+      }
+
+      .condition-card h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>First Aid Conditions</h1>
-    </header>
-    <main>
-        {% for condition in conditions %}
-            <div class="condition-card">
-                <h2>{{ condition.title }}</h2>
-                <p><strong>Description:</strong> {{ condition.description }}</p>
-                <p><strong>Category:</strong> {{ condition.category }}</p>
-                <p><strong>Urgency:</strong> {{ condition.urgency_level }}</p>
-                
-            </div>
-            <hr>
-        {% empty %}
-            <p>No conditions available at the moment.</p>
-        {% endfor %}
-    </main>
-    <footer>
-        <p>&copy; 2025 Health Platform</p>
-    </footer>
+  <header class="app-header">
+    <h1 class="header-title">
+      {% if user.is_authenticated %}
+        Welcome, {{ user.username }}!
+      {% else %}
+        Hello there!
+      {% endif %}
+    </h1>
+
+    <div class="auth-buttons">
+      {% if user.is_authenticated %}
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      {% else %}
+        <a href="/register">Sign Up</a>
+        <a href="/">Login</a>
+        <a href="/first_aid_conditions">Tips</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main>
+    <h2 class="section-title">First Aid Conditions</h2>
+
+    {% for condition in conditions %}
+      <div class="condition-card">
+        <h2>{{ condition.title }}</h2>
+        <p><strong>Description:</strong> {{ condition.description }}</p>
+        <p><strong>Category:</strong> {{ condition.category }}</p>
+        <p><strong>Urgency:</strong> {{ condition.urgency_level }}</p>
+      </div>
+    {% empty %}
+      <p style="text-align:center;">No conditions available at the moment.</p>
+    {% endfor %}
+  </main>
+
+  <footer>
+    &copy; 2025 Med Alert
+  </footer>
 </body>
 </html>

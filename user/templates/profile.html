@@ -1,193 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile</title>
-  <style>
-    :root {
-      --primary-color: #4a90e2;
-      --white: #ffffff;
-      --gray-light: #f0f0f0;
-      --text-light: #666666;
-      --text-lighter: #999999;
-      --border-radius: 8px;
-      --spacing-xs: 4px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
-      --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #ff4d4f;
+            --primary-color: #6a5acd;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --text-dark: #333;
+            --text-light: #666;
+            --text-lighter: #999;
+            --red: #ff4d4f;
+            --pink: #ff85c0;
+            --blue: #40a9ff;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --border-radius: 12px;
+            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
 
-    @keyframes slideInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #f8f8f8;
+            color: var(--text-dark);
+        }
 
-    /* Profile Page Styles */
-    .profile-header {
-      background-color: var(--primary-color);
-      padding: 0;
-    }
+        .app-header {
+            background-color: #fff;
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-md);
+        }
 
-    .profile-banner {
-      height: 150px;
-      display: flex;
-      align-items: center;
-      padding: var(--spacing-md);
-      position: relative;
-    }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .profile-content {
-      padding-top: 60px;
-      position: relative;
-    }
+        .header-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
 
-    .profile-card {
-      background-color: var(--white);
-      border-radius: var(--border-radius);
-      padding: var(--spacing-lg);
-      box-shadow: var(--shadow-md);
-      text-align: center;
-      margin-top: -80px;
-      position: relative;
-      z-index: 10;
-      animation: slideInUp 0.5s ease;
-    }
+        .profile-pic {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: var(--spacing-sm);
+        }
 
-    .profile-avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin: -70px auto 20px;
-      border: 4px solid var(--white);
-      background-color: var(--gray-light);
-    }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
 
-    .profile-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+        .main-content {
+            padding: var(--spacing-lg);
+        }
 
-    .profile-name {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: var(--spacing-xs);
-    }
+        .carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-xl);
+        }
 
-    .profile-info,
-    .profile-location {
-      color: var(--text-light);
-      margin-bottom: var(--spacing-xs);
-    }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
 
-    .profile-details {
-      background-color: var(--white);
-      border-radius: var(--border-radius);
-      padding: var(--spacing-lg);
-      margin-top: var(--spacing-md);
-      box-shadow: var(--shadow-sm);
-      animation: slideInUp 0.7s ease;
-    }
+        .carousel-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            padding: var(--spacing-lg);
+            color: var(--white);
+            background-color: var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .detail-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: var(--spacing-md);
-    }
+        .carousel-slide h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+        }
 
-    .detail-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: var(--gray-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: var(--spacing-md);
-    }
+        .carousel-slide img {
+            height: 140px;
+        }
 
-    .detail-icon img {
-      width: 20px;
-      height: 20px;
-    }
+        .carousel-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 var(--spacing-md);
+            box-sizing: border-box;
+        }
 
-    .detail-content {
-      flex: 1;
-    }
+        .carousel-button {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-    .detail-label {
-      font-size: 14px;
-      color: var(--text-lighter);
-      margin-bottom: 2px;
-    }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
 
-    .detail-value {
-      font-weight: 500;
-    }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+        }
 
-    .profile-actions {
-      margin-top: var(--spacing-lg);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-md);
-      animation: slideInUp 0.9s ease;
-    }
+        .service-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
 
-    .action-btn {
-      padding: var(--spacing-md);
-    }
-  </style>
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .icon-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .red { background-color: var(--red); }
+        .pink { background-color: var(--pink); }
+        .blue { background-color: var(--blue); }
+
+        .service-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .service-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .condition-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .condition-card h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--accent-color);
+        }
+
+        .condition-card p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .auth-buttons a {
+            text-decoration: none;
+            background-color: var(--accent-color);
+            color: var(--white);
+            padding: 10px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .auth-buttons a:hover {
+            background-color: #d9363e;
+        }
+
+        @media (max-width: 600px) {
+            .auth-buttons {
+                justify-content: center;
+                width: 100%;
+                margin-top: 12px;
+            }
+
+            header.app-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .condition-card h2 {
+                font-size: 16px;
+            }
+            .profile-avatar {
+    width: 100px; /* Increase size as needed */
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: var(--spacing-md);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+        }
+    </style>
 </head>
 <body>
-  <h1>Profile of {{ user.username }}</h1>
-
-  {% if messages %}
-    <ul>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div>
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" value="{{ form.username.value }}" required>
-    </div>
-
-    <div>
-      <label for="age">Age:</label>
-      <input type="number" id="age" name="age" value="{{ form.age.value }}" required>
-    </div>
-
-    <div>
-      <label for="gender">Gender:</label>
-      <input type="text" id="gender" name="gender" value="{{ form.gender.value }}" required>
-    </div>
-
-    <div>
-      <label for="profile_picture">Profile Picture:</label>
+  <div class="main-content">
+    <div class="condition-card" style="text-align:center;">
       {% if user.profile_picture %}
-        <div class="profile-avatar">
-          <img src="{{ user.profile_picture_url }}" alt="Profile Picture">
+      <div class="profile-avatar" style="margin-top: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+      </div>
+    {% endif %}
+    
+      <h1 style="font-size: 22px; font-weight: 600;">Profile of {{ user.username }}</h1>
+    </div>
+
+    {% if messages %}
+      <ul style="list-style: none; padding: 0;">
+        {% for message in messages %}
+          <li style="background-color: var(--accent-color); color: white; padding: 10px; margin-bottom: 8px; border-radius: var(--border-radius);">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="condition-card" style="max-width: 500px; margin: auto;">
+      {% csrf_token %}
+
+      <div class="form-group" style="margin-bottom: var(--spacing-md);">
+        <label for="username" style="display: block; font-weight: 500;">Username:</label>
+        <input type="text" id="username" name="username" value="{{ form.username.value }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: var(--border-radius);">
+      </div>
+
+      <div class="form-group" style="margin-bottom: var(--spacing-md);">
+        <label for="age" style="display: block; font-weight: 500;">Age:</label>
+        <input type="number" id="age" name="age" value="{{ form.age.value }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: var(--border-radius);">
+      </div>
+
+      <div class="form-group" style="margin-bottom: var(--spacing-md);">
+        <label for="gender" style="display: block; font-weight: 500;">Gender:</label>
+        <input type="text" id="gender" name="gender" value="{{ form.gender.value }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: var(--border-radius);">
+      </div>
+
+      <div class="form-group" style="margin-bottom: var(--spacing-md);">
+        <label for="profile_picture" style="display: block; font-weight: 500;">Profile Picture:</label>
+        {% if user.profile_picture %}
+        <div class="profile-avatar" style="margin-top: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+          <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
         </div>
       {% endif %}
-      <input type="file" id="profile_picture" name="profile_picture">
+      
+        <input type="file" id="profile_picture" name="profile_picture">
+      </div>
+      <div class="auth-buttons" style="justify-content: center; margin-top: var(--spacing-md);">
+        <button type="submit" style="
+          background-color: var(--accent-color); 
+          color: var(--white); 
+          padding: 10px 16px; 
+          border-radius: var(--border-radius); 
+          font-weight: 500;
+          border: none;
+          cursor: pointer;
+        ">
+          Update Profile
+        </button>
+      </div>
+    </form>
+
+    <div class="auth-buttons" style="justify-content: center; margin-top: var(--spacing-xl);">
+      <a href="/logout" style="
+        background-color: var(--accent-color); 
+        color: var(--white); 
+        padding: 10px 16px; 
+        border-radius: var(--border-radius); 
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-block;
+      ">
+        Logout
+      </a>
     </div>
-
-    <button type="submit">Update Profile</button>
-  </form>
-
-  <a href="/logout">Logout</a>
+  </div>
 </body>
-</html>
+
+
