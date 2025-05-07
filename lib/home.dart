@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medalert/profile.dart';
+import 'package:medalert/Ambulance.dart';
 
 class HomeScrenn extends StatelessWidget {
   const HomeScrenn({super.key});
@@ -7,38 +9,94 @@ class HomeScrenn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text(
+          'Hello Ideate !',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ),
+      drawer: Drawer(
+        backgroundColor: const Color(0xFF333333),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Menu',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(color: Colors.white54),
+              ListTile(
+                leading: const Icon(Icons.home, color: Colors.white),
+                title: const Text(
+                  'Home',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.person, color: Colors.white),
+                title: const Text(
+                  'Profile',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfilePage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout, color: Colors.white),
+                title: const Text(
+                  'Log Out',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: const [
-                      CircleAvatar(
-                        child: Icon(Icons.person, color: Colors.white),
-                        backgroundColor: Colors.grey,
-                        radius: 20,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Hello Ideate !',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-                ],
-              ),
-              const SizedBox(height: 20),
-
               // Illustration
               Center(
                 child: Image.asset(
@@ -58,7 +116,7 @@ class HomeScrenn extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   decoration: BoxDecoration(
-                    color: Color(0xFF94F2FF),
+                    color: const Color(0xFF94F2FF),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   alignment: Alignment.center,
@@ -76,25 +134,31 @@ class HomeScrenn extends StatelessWidget {
               ),
 
               // Services
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildServiceCard(
-                    'Ambulance',
-                    'assets/ambulance.png', // Replace with your actual asset path
-                    Color(0xFFFF9A94),
-                  ),
-                  _buildServiceCard(
-                    'Medicine',
-                    'assets/medicine.png', // Replace with your actual asset path
-                    Color(0xFFF094FF),
-                  ),
-                  _buildServiceCard(
-                    'Nearby Hospital',
-                    'assets/hospital.png', // Replace with your actual asset path
-                    Color(0xFF96B3FF),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildServiceCard(
+                        context,
+                        'Ambulance Booking',
+                        'assets/ambulance.png',
+                        const Color(0xFFFF9A94),
+                        const AmbulanceScreen(), // Navigate to AmbulanceScreen
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildServiceCard(
+                        context,
+                        'Medicine Order',
+                        'assets/medicine.png',
+                        const Color(0xFFF094FF),
+                        null, // No navigation for now
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
               const SizedBox(height: 30),
@@ -109,7 +173,7 @@ class HomeScrenn extends StatelessWidget {
                 Colors.amber.shade200,
                 Icons.shield,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               _buildTipCard(
                 'Affordable and healthy\neating tips for covid patient',
                 Colors.cyan.shade100,
@@ -122,13 +186,23 @@ class HomeScrenn extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceCard(String title, String assetPath, Color color) {
+  Widget _buildServiceCard(
+    BuildContext context,
+    String title,
+    String assetPath,
+    Color color,
+    Widget? navigateTo,
+  ) {
     return GestureDetector(
       onTap: () {
-        // Service tap
+        if (navigateTo != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => navigateTo),
+          );
+        }
       },
       child: Container(
-        width: 100,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: color,
@@ -136,8 +210,8 @@ class HomeScrenn extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Image.asset(assetPath, height: 60, width: 60, fit: BoxFit.contain),
-            const SizedBox(height: 0),
+            Image.asset(assetPath, height: 80, width: 100, fit: BoxFit.contain),
+            const SizedBox(height: 10),
             Text(
               title,
               textAlign: TextAlign.center,
@@ -155,6 +229,8 @@ class HomeScrenn extends StatelessWidget {
         // Tip card tap
       },
       child: Container(
+        width: double.infinity,
+        height: 80,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: color,
